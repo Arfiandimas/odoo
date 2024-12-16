@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_arfian_user,arfian,model_arfian,base.group_user,1,1,1,1
+access_arfian_line_user,arfian.line,model_arfian_line,base.group_user,1,1,1,1
+access_arfian_transient_user,arfian.transient,model_arfian_transient,base.group_user,1,1,1,1
+access_laptop_screen_user,laptop.screen,model_laptop_screen,base.group_user,1,1,1,1
+access_laptop_laptop_user,laptop.laptop,model_laptop_laptop,base.group_user,1,1,1,1
