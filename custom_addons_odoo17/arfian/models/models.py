@@ -5,15 +5,15 @@ from odoo import models, fields, api
 
 class Arfian(models.Model):
     _name = "arfian"
-    _inherit = ["arfian.abstract"]
+    _inherit = ["arfian.abstract", "mail.thread"]
     _description = "Modul Saya Sendiri"
 
-    name = fields.Char(string="Name", index=True)
-    total = fields.Integer(string="Total")
-    description = fields.Text()
-    user_id = fields.Many2one(comodel_name="res.users", string="User")
+    name = fields.Char(string="Name", index=True, size=100, trim=True)
+    total = fields.Integer(string="Total", tracking=True)
+    description = fields.Text(string="Description", translate=True)
+    user_id = fields.Many2one(comodel_name="res.users", string="User", ondelete="restrict", tracking=True)
     total_compute = fields.Float(
-        compute="_value_pc", store=True, string="Total Compute"
+        compute="_value_pc", store=True, string="Total Compute", tracking=True
     )
     tags_ids = fields.Many2many(
         comodel_name="res.partner.category",
@@ -28,14 +28,15 @@ class Arfian(models.Model):
         string="Arfian Line"
     )
     active = fields.Boolean(string="Active", default=True)
-    company_id = fields.Many2one(comodel_name="res.company", string="Company")
+    company_id = fields.Many2one(comodel_name="res.company", string="Company", tracking=True)
 
     currency_id = fields.Many2one(comodel_name="res.currency", string="Currency")
     price_total = fields.Monetary(
         compute="_compute_total",
         store=True,
         string="Price Total",
-        currency_field="currency_id"
+        currency_field="currency_id",
+        tracking=True
     )
     attachment = fields.Binary(string="Attachment", attachment=False)
     icon_image = fields.Image(string="Icon Image", max_height=1024, max_width=1024)
@@ -50,7 +51,7 @@ class Arfian(models.Model):
             ("done", "Done"),
             ("cancel", "Cancel")
         ],
-        string="Status", default="draft", required=True
+        string="Status", default="draft", required=True, tracking=True
     )
     ref = fields.Reference(string="Reference", selection=[("res.partner", "Partner")])
     model_name = fields.Char(string="Model")
@@ -79,6 +80,27 @@ class Arfian(models.Model):
 
     def action_view_sales(self):
         return
+
+    # ORM API CRUD
+    @api.model_create_multi
+    def create(self, vals_list):
+        olah_data = vals_list
+        res = super().create(vals_list)
+        olah_data = res
+        return res
+
+    def read(self, fields=None, load='_classic_read'):
+        return super().read(fields=fields, load=load)
+
+    def write(self, vals):
+        olah_data = vals
+        res = super().write(vals)
+        olah_data = res
+        return res
+
+    def unlink(self):
+        # custom code
+        return super().unlink()
 
 class ArfianLine(models.Model):
     _name = "arfian.line"
